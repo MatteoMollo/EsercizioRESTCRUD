@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.winwinit.bcc.constants.AuthorityRolesConstants;
-import eu.winwinit.bcc.entities.Ordine;
 import eu.winwinit.bcc.model.OrdineResponse;
 import eu.winwinit.bcc.security.JwtTokenProvider;
 import eu.winwinit.bcc.service.OrdineService;
