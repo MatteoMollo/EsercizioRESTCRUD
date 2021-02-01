@@ -46,6 +46,7 @@ public class ArticoloServiceImpl implements ArticoloService{
 		}else {
 			Optional<Articolo> articolo = articoloRepository.findById(id);
 			try {
+				articolo.get();
 				articoloRepository.deleteById(id);
 			}catch(Exception e) {
 				stringaConferma = "Impossibile eliminare un articolo non esistente";
