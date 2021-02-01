@@ -8,7 +8,7 @@ public interface OrdineService {
 
 	public List<OrdineResponse> findAllOrdini();
 	
-	public void saveOrdine(OrdineResponse richiesta);
+	public String saveOrdine(OrdineResponse richiesta);
 	
 	public String delete(Integer id);
 	

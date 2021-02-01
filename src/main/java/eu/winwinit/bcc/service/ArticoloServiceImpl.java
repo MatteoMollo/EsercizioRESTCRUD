@@ -1,6 +1,5 @@
 package eu.winwinit.bcc.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,33 +26,30 @@ public class ArticoloServiceImpl implements ArticoloService{
 	}
 
 	@Override
-	public void save(Articolo articolo) {
-		articoloRepository.save(articolo);
-
+	public String save(Articolo articolo) {
+		String risposta = "Articolo creato correttamente con id: ";
+		if(articolo.getNome() == null || articolo.getPrezzo() == null || articolo.getPrezzo() <= 0) {
+			risposta = "Impossibile creare un articolo i cui campi non sono specificati o non accettabili";
+		}else {
+			articoloRepository.save(articolo);
+		}
+		return risposta;
 	}
 
-	//ritorna stringa
+	//ritorna stringa con controllo che l'articolo da eliminare non sia presente in un ordine
+	//e che esista effettivamente
 	public String delete(Integer id) {
-		List<OrdineArticoli> listaOrdiniArticoli = ordineArticoliRepository.findAll();
-		List<Articolo> listaArticoli = articoloRepository.findAll();
-		List<Integer> idArticoli = new ArrayList<Integer>();
-		List<Integer> idArticolitotali = new ArrayList<Integer>();
 		String stringaConferma = "Articolo eliminato correttamente";
-		for(OrdineArticoli referenze : listaOrdiniArticoli) {
-			idArticoli.add(referenze.getArticolo().getId());
-		}
-		for(Articolo articolo : listaArticoli) {
-			idArticolitotali.add(articolo.getId());
-		}
-		if(idArticoli.contains(id)) {
+		List<OrdineArticoli> ordineArticoli = ordineArticoliRepository.findByIdArticolo(id);
+		if(ordineArticoli.size() != 0) {
 			stringaConferma = "Impossibile eliminare un articolo presente in un ordine";
 		}else {
-			if(idArticolitotali.contains(id)) {
+			Optional<Articolo> articolo = articoloRepository.findById(id);
+			try {
 				articoloRepository.deleteById(id);
-			}else {
+			}catch(Exception e) {
 				stringaConferma = "Impossibile eliminare un articolo non esistente";
 			}
-
 		}
 		return stringaConferma;
 	}
@@ -65,19 +61,18 @@ public class ArticoloServiceImpl implements ArticoloService{
 
 	@Override
 	public String updatePrezzoById(Integer prezzo, Integer id) {
-		// TODO Auto-generated method stub
-		List<Articolo> listaArticoli = articoloRepository.findAll();
-		List<Integer> idArticoli = new ArrayList<Integer>();
 		String stringaRisposta = "Articolo modificato correttamente";
-		for(Articolo articolo : listaArticoli) {
-			idArticoli.add(articolo.getId());
-		}
-		if(idArticoli.contains(id)) {
-			articoloRepository.updatePrezzoById(prezzo, id);
+		if(prezzo <= 0) {
+			stringaRisposta = "Impossibile stabilire un prezzo minore o uguale a 0";
 		}else {
-			stringaRisposta = "Impossibile modificare un articolo non esistente";
+			Optional<Articolo> articolo = articoloRepository.findById(id);
+			try {
+				articolo.get();
+				articoloRepository.updatePrezzoById(prezzo, id);
+			}catch(Exception e) {
+				stringaRisposta = "Impossibile modificare un articolo non esistente";
+			}
 		}
 		return stringaRisposta;
 	}
-
 }

@@ -13,20 +13,24 @@ import eu.winwinit.bcc.entities.OrdineArticoli;
 
 @Repository("ordineArticoliRepository")
 public interface OrdineArticoliRepository extends JpaRepository<OrdineArticoli, Integer>{
-	
+
 	@Query("select oa from OrdineArticoli oa where idordine=:idOrdine")
 	public List<OrdineArticoli> findAllByIdOrdine(@Param("idOrdine")Integer idOrdine);
-	
+
 	@Transactional
 	@Modifying
 	@Query("delete from OrdineArticoli where idordine = :idOrdine")
 	public void deleteByIdOrdine(@Param("idOrdine")Integer idOrdine);
-	
+
 	@Transactional
 	@Modifying
 	@Query("update OrdineArticoli set quantita = :quantita where idordine = :idordine and idarticolo = :idarticolo")
-	public void updateQuantitaArticoloByIdOrdine(@Param("quantita")Integer quantita, 
-												 @Param("idordine")Integer idordine,
-												 @Param("idarticolo")Integer idarticolo);
-
+	public void updateQuantitaArticoloByIdOrdine(
+			@Param("quantita")Integer quantita, 
+			@Param("idordine")Integer idordine,
+			@Param("idarticolo")Integer idarticolo
+			);
+	
+	@Query("select oa from OrdineArticoli oa where idarticolo = :idarticolo")
+	public List<OrdineArticoli> findByIdArticolo(@Param("idarticolo")Integer idarticolo);
 }

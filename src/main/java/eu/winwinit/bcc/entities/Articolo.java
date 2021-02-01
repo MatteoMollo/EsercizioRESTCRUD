@@ -18,16 +18,13 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "articoli", uniqueConstraints = @UniqueConstraint(columnNames = "id"))
 public class Articolo implements java.io.Serializable {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nome;
 	private Integer prezzo;
 
-	
+
 	@OneToMany(mappedBy="ordine")
 	private List<OrdineArticoli> dettaglioOrdini;
 
@@ -60,9 +57,5 @@ public class Articolo implements java.io.Serializable {
 	public void setPrezzo(Integer prezzo) {
 		this.prezzo = prezzo;
 	}
-
-	
-	
-	
 
 }

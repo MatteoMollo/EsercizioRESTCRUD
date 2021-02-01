@@ -33,8 +33,6 @@ public class OrdineArticoli {
 		
 	}
 
-
-
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -68,10 +66,4 @@ public class OrdineArticoli {
 	public void setQuantita(Integer quantita) {
 		this.quantita = quantita;
 	}
-	
-	
-	
-	
-	
-
 }

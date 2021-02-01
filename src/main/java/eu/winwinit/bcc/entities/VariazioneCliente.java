@@ -21,9 +21,6 @@ import javax.persistence.Table;
 @Table(name = "variazioni_clienti")
 public class VariazioneCliente implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Cliente clienti;
@@ -88,6 +85,4 @@ public class VariazioneCliente implements java.io.Serializable {
 	public void setLastModify(Date lastModify) {
 		this.lastModify = lastModify;
 	}
-
-
 }

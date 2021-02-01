@@ -11,7 +11,7 @@ public interface ArticoloService {
 	
 	public Optional<Articolo> findById(Integer id);
 	
-	public void save(Articolo articolo);
+	public String save(Articolo articolo);
 	
 	public String delete(Integer id);
 	

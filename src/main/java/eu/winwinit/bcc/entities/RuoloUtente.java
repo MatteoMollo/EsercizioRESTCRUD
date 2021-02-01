@@ -24,16 +24,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "ruoli_utenti", uniqueConstraints = @UniqueConstraint(columnNames = "ruolo"))
 public class RuoloUtente implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String ruolo;
 	private Utente utenti;
 	private Date lastModify;
-	
-//	private ArrayList<Utente> utenti = new ArrayList<Utente>();
 
 	public RuoloUtente() {
 	}
@@ -41,11 +36,6 @@ public class RuoloUtente implements java.io.Serializable {
 	public RuoloUtente(String ruolo) {
 		this.ruolo = ruolo;
 	}
-
-//	public RuoloUtente(String ruolo, ArrayList<Utente> utenti) {
-//		this.ruolo = ruolo;
-//		this.utenti = utenti;
-//	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -87,15 +77,4 @@ public class RuoloUtente implements java.io.Serializable {
 	public void setLastModify(Date lastModify) {
 		this.lastModify = lastModify;
 	}
-
-
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ruoliUtenti")
-//	public ArrayList<Utente> getUtenti() {
-//		return this.utenti;
-//	}
-//
-//	public void setUtenti(ArrayList<Utente> utenti) {
-//		this.utenti = utenti;
-//	}
-
 }

@@ -12,7 +12,6 @@ public class OrdineResponse {
 	private String indirizzo;
 	private List<ArticoloResponse> listaArticoli;
 	
-	
 	public OrdineResponse(int idOrdine, String intestatario, String indirizzo, List<ArticoloResponse> listaArticoli) {
 		super();
 		this.idOrdine = idOrdine;
@@ -21,48 +20,35 @@ public class OrdineResponse {
 		this.listaArticoli = listaArticoli;
 	}
 
-
 	public int getIdOrdine() {
 		return idOrdine;
 	}
-
 
 	public void setIdOrdine(int idOrdine) {
 		this.idOrdine = idOrdine;
 	}
 
-
 	public String getIntestatario() {
 		return intestatario;
 	}
-
 
 	public void setIntestatario(String intestatario) {
 		this.intestatario = intestatario;
 	}
 
-
 	public String getIndirizzo() {
 		return indirizzo;
 	}
-
 
 	public void setIndirizzo(String indirizzo) {
 		this.indirizzo = indirizzo;
 	}
 
-
 	public List<ArticoloResponse> getListaArticoli() {
 		return listaArticoli;
 	}
 
-
 	public void setListaArticoli(List<ArticoloResponse> listaArticoli) {
 		this.listaArticoli = listaArticoli;
 	}
-	
-	
-	
-	
-
 }

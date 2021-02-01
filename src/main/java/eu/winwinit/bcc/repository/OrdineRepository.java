@@ -7,14 +7,5 @@ import eu.winwinit.bcc.entities.Ordine;
 
 @Repository("ordineRepository")
 public interface OrdineRepository extends JpaRepository<Ordine, Integer> {
-	
-//	public List<Ordine> findAll();
-//	
-//	@Transactional
-//	@Modifying
-//	@Query("delete from Ordine o where o.id = :id")
-//	public void deleteOrdineById(@Param("id")Integer id);
-//	
-//	public Optional<Ordine> findById(Integer id);
-      
+
 }

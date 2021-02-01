@@ -1,6 +1,5 @@
 package eu.winwinit.bcc.entities;
 
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 
@@ -16,16 +15,10 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
-
 @Entity
 @Table(name = "ordini", uniqueConstraints = @UniqueConstraint(columnNames = "id"))
 public class Ordine implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -39,7 +32,6 @@ public class Ordine implements java.io.Serializable {
 	
 	public Ordine() {
 	}
-
    	
    	public Ordine(String intestatario, String indirizzo) {
 		this.intestatario = intestatario;
@@ -81,6 +73,4 @@ public class Ordine implements java.io.Serializable {
 	public void setListaArticoli(List<OrdineArticoli> listaArticoli) {
 		this.listaArticoli = listaArticoli;
 	}
-		
-
 }

@@ -25,9 +25,6 @@ import lombok.Data;
 @Table(name = "utenti", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Utente implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Filiale filiali;

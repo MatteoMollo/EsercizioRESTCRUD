@@ -12,20 +12,11 @@ import eu.winwinit.bcc.entities.Articolo;
 @Repository("articoloRepository")
 public interface ArticoloRepository extends JpaRepository<Articolo, Integer> {
 
-//	
-//	
-//	@Query("select a from Articolo a where id = :id")
-//	Articolo findArticoloById(@Param("id")Integer id);
-//	
-//	@Transactional
-//	@Modifying
-//	@Query("delete from Articolo where id = :id")
-//	void deleteArticolo(@Param("id")Integer id);
-//	
 	@Transactional
 	@Modifying
 	@Query("update Articolo set prezzo = :prezzo where id = :id")
-	void updatePrezzoById(@Param("prezzo")Integer prezzo,
-							@Param("id")Integer id);
-	
+	void updatePrezzoById(
+			@Param("prezzo")Integer prezzo,
+			@Param("id")Integer id
+			);
 }

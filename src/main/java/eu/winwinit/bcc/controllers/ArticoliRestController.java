@@ -27,62 +27,58 @@ public class ArticoliRestController {
 	@Autowired
 	private ArticoloService articoloService;
 
-
 	@RequestMapping(value = "/articoli-search", method = RequestMethod.GET)
 	@Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
 	public ResponseEntity<List<Articolo>> articoliSearch(
-			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken) {
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
+			){
 		List<Articolo> articoloList = new ArrayList<Articolo>();
 		articoloList.addAll(articoloService.findAll());
 		return new ResponseEntity<>(articoloList, HttpStatus.OK);
 	}
 
-
-	
 	@RequestMapping(value = "/articoli-search-by-id/{id}", method = RequestMethod.GET)
 	@Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
 	public ResponseEntity<Object> articoloSearchById(
 			@PathVariable( "id" ) Integer id,
-			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken){
-			Optional<Articolo> articolo = articoloService.findById(id);
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
+			){
+		Optional<Articolo> articolo = articoloService.findById(id);
 		try {
 			return new ResponseEntity<>(articolo.get(), HttpStatus.OK);
 		}catch(NoSuchElementException e) {
 			return new ResponseEntity<>("Articolo non presente nel magazzino", HttpStatus.OK);
 		}
-		
 	}
-
 
 	@RequestMapping(value = "/new-articolo", method = RequestMethod.POST)
 	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
 	public ResponseEntity<String> articoliInsert(
 			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken,
 			@RequestBody Articolo articolo
-			) {
-		articoloService.save(articolo);
-		return new ResponseEntity<>(("nuovo id creato = " + articolo.getId()), HttpStatus.CREATED);
+			){
+		String risposta = articoloService.save(articolo);
+		return new ResponseEntity<>((risposta + articolo.getId()), HttpStatus.CREATED);
 	}
-	 
 
 	@RequestMapping(value = "/elimina-art/{id}", method = RequestMethod.DELETE)
 	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	public ResponseEntity<String> articoliCanc(@PathVariable( "id" ) Integer id,
+	public ResponseEntity<String> articoliCanc(
+			@PathVariable( "id" ) Integer id,
 			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
-			) {
+			){
 		String stringaConferma = articoloService.delete(id);
 		return new ResponseEntity<>(stringaConferma, HttpStatus.OK);
-
 	}
 
 	@RequestMapping(value = "/modifica-art/{id}/{prezzo}", method = RequestMethod.PUT)
 	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	public ResponseEntity<String> articoliMod(@PathVariable( "id" ) Integer id, @PathVariable( "prezzo" ) Integer prezzo,
+	public ResponseEntity<String> articoliMod(
+			@PathVariable( "id" ) Integer id, 
+			@PathVariable( "prezzo" ) Integer prezzo,
 			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
-			) {
+			){
 		String stringaRisposta = articoloService.updatePrezzoById(prezzo, id);
 		return new ResponseEntity<>(stringaRisposta, HttpStatus.OK);
-
 	}
-
 }
