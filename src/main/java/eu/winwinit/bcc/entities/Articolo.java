@@ -27,14 +27,6 @@ public class Articolo implements java.io.Serializable {
 	private String nome;
 	private Integer prezzo;
 
-	public Articolo() {
-	}
-
-	public Articolo(Integer id, String nome, Integer prezzo) {
-		this.id = id;
-		this.nome = nome;
-		this.prezzo = prezzo;
-	}
 	
 	@OneToMany(mappedBy="ordine")
 	private List<OrdineArticoli> dettaglioOrdini;

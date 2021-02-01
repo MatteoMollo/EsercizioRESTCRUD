@@ -1,6 +1,7 @@
 package eu.winwinit.bcc.controllers;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,46 +38,50 @@ public class OrdiniRestController {
 		 return new ResponseEntity<>(ordineList, HttpStatus.OK);
 	    }
 	 
-	 @RequestMapping(value = "/ordini-search-by-id={id}", method = RequestMethod.GET)
+	 @RequestMapping(value = "/ordini-search-by-id/{id}", method = RequestMethod.GET)
 	 @Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
-	    public ResponseEntity<OrdineResponse> ordiniSearchById(@PathVariable( "id" ) Integer id,
+	    public ResponseEntity<Object> ordiniSearchById(@PathVariable( "id" ) Integer id,
 	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken) {
-		 OrdineResponse ordine = ordineService.findOrdineById(id);
-		 return new ResponseEntity<>(ordine, HttpStatus.OK);
+		 try {
+			 OrdineResponse ordine = ordineService.findOrdineById(id);
+			 return new ResponseEntity<>(ordine, HttpStatus.OK);
+		 }catch(NoSuchElementException e) {
+			 return new ResponseEntity<>("L'ordine cercato non esiste", HttpStatus.OK);
+		 }
 	    }
 	 
 	 
 	 @RequestMapping(value = "/new-ordine", method = RequestMethod.POST)
 	 @Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus ordiniInsert(
+	 public  ResponseEntity<String> ordiniInsert(
 	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken,
 	 @RequestBody OrdineResponse ordine
 	 ) {
 		 ordineService.saveOrdine(ordine);
-		 return HttpStatus.CREATED;
+		 return new ResponseEntity<>(("Nuovo id creato = " + ordine.getIdOrdine()), HttpStatus.CREATED);
 	 }
 	 
 	 
-	 @RequestMapping(value = "/elimina-ord/id={id}", method = RequestMethod.DELETE)
+	 @RequestMapping(value = "/elimina-ord/{id}", method = RequestMethod.DELETE)
 	 @Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus ordiniCanc(@PathVariable( "id" ) Integer id,
+	 public ResponseEntity<String> ordiniCanc(@PathVariable( "id" ) Integer id,
 	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
 	 ) {
-		 ordineService.delete(id);
-		 return HttpStatus.OK;
+		 String stringaRisposta = ordineService.delete(id);
+		 return new ResponseEntity<>(stringaRisposta, HttpStatus.OK);
 		 
 	 }
 	 
-	 
-	 @RequestMapping(value = "/modifica-ord/{idordine}/{idarticolo}/quantita={quantita}", method = RequestMethod.PUT)
+	 //DA FARE CONTROLLO SULL'ID ARTICOLO POSSIBILMENTE INESISTENTE
+	 @RequestMapping(value = "/modifica-ord/{idordine}/{idarticolo}/{quantita}", method = RequestMethod.PUT)
 	 @Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus ordiniMod(@PathVariable( "idordine" ) Integer idordine,
+	 public ResponseEntity<String> ordiniMod(@PathVariable( "idordine" ) Integer idordine,
 			 						@PathVariable( "idarticolo" ) Integer idarticolo,
 			 						@PathVariable( "quantita" ) Integer quantita,
 	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
 	 ) {
-		 ordineService.updateQuantitaArticoloByIdOrdine(quantita, idordine, idarticolo);
-		 return HttpStatus.OK;
+		 String stringaRisposta = ordineService.updateQuantitaArticoloByIdOrdine(quantita, idordine, idarticolo);
+		 return new ResponseEntity<>(stringaRisposta, HttpStatus.OK);
 		 
 	 }
 

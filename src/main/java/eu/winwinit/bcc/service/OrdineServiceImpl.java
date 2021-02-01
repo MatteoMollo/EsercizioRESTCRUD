@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eu.winwinit.bcc.entities.Articolo;
 import eu.winwinit.bcc.entities.Ordine;
 import eu.winwinit.bcc.entities.OrdineArticoli;
 import eu.winwinit.bcc.model.ArticoloResponse;
@@ -89,15 +90,43 @@ public class OrdineServiceImpl implements OrdineService{
 	}
 	
 	//elimino l'oggetto ordine dalla sua tabella e il suo riferimento alla tabella ordinearticoli
-	public void delete(Integer id) {
-		ordineArticoliRepository.deleteByIdOrdine(id);
-		ordineRepository.deleteOrdineById(id);
+	public String delete(Integer id) {
+		String stringRisposta = "Ordine eliminato correttamente";
+		List<Ordine> listaOrdini = ordineRepository.findAll();
+		List<Integer> listaIdOrdini = new ArrayList<Integer>();
+		for(Ordine ordine : listaOrdini) {
+			listaIdOrdini.add(ordine.getId());
+		}
+		if(listaIdOrdini.contains(id)) {
+			ordineArticoliRepository.deleteByIdOrdine(id);
+			ordineRepository.deleteById(id);
+		}else {
+			stringRisposta = "Impossibile eliminare un ordine non esistente";
+		}
+		
+		return stringRisposta;
 	}
 	
 	//modifico il campo di un articolo contenuito in una lista articoli
 	// del rispettivo ordine
-	public void updateQuantitaArticoloByIdOrdine(Integer quantita, Integer idordine, Integer idarticolo) {
-		ordineArticoliRepository.updateQuantitaArticoloByIdOrdine(quantita, idordine, idarticolo);
+	public String updateQuantitaArticoloByIdOrdine(Integer quantita, Integer idordine, Integer idarticolo) {
+		String stringRisposta = "Ordine modificato correttamente";
+		List<Articolo> articoli = articoloRepository.findAll();
+		List<Ordine> listaOrdini = ordineRepository.findAll();
+		List<Integer> listaIdOrdini = new ArrayList<Integer>();
+		List<Integer> listaIdArticoli = new ArrayList<Integer>();
+		for(Ordine ordine : listaOrdini) {
+			listaIdOrdini.add(ordine.getId());
+		}
+		for(Articolo articolo : articoli) {
+			listaIdArticoli.add(articolo.getId());
+		}
+		if(listaIdOrdini.contains(idordine) && listaIdArticoli.contains(idarticolo)) {
+			ordineArticoliRepository.updateQuantitaArticoloByIdOrdine(quantita, idordine, idarticolo);
+		}else {
+			stringRisposta = "Impossibile modificare un ordine non esistente";
+		}
+		return stringRisposta;
 	}
 
 

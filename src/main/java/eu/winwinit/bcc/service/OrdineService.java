@@ -10,9 +10,9 @@ public interface OrdineService {
 	
 	public void saveOrdine(OrdineResponse richiesta);
 	
-	public void delete(Integer id);
+	public String delete(Integer id);
 	
-	public void updateQuantitaArticoloByIdOrdine(Integer quantita, Integer idordine, Integer idarticolo);
+	public String updateQuantitaArticoloByIdOrdine(Integer quantita, Integer idordine, Integer idarticolo);
 	
 	public OrdineResponse findOrdineById(Integer id);
 }

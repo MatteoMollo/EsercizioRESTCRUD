@@ -2,6 +2,8 @@ package eu.winwinit.bcc.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eu.winwinit.bcc.constants.AuthorityRolesConstants;
 import eu.winwinit.bcc.entities.Articolo;
-import eu.winwinit.bcc.security.JwtTokenProvider;
 import eu.winwinit.bcc.service.ArticoloService;
 
 @RestController
@@ -24,60 +25,64 @@ import eu.winwinit.bcc.service.ArticoloService;
 public class ArticoliRestController {
 
 	@Autowired
-	JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+	private ArticoloService articoloService;
+
+
+	@RequestMapping(value = "/articoli-search", method = RequestMethod.GET)
+	@Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
+	public ResponseEntity<List<Articolo>> articoliSearch(
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken) {
+		List<Articolo> articoloList = new ArrayList<Articolo>();
+		articoloList.addAll(articoloService.findAll());
+		return new ResponseEntity<>(articoloList, HttpStatus.OK);
+	}
+
+
 	
-	@Autowired
-	ArticoloService articoloService;
-	
-	
-	 @RequestMapping(value = "/articoli-search", method = RequestMethod.GET)
-	 @Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
-	    public ResponseEntity<List<Articolo>> articoliSearch(
-	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken) {
-		 List<Articolo> articoloList = new ArrayList<Articolo>();
-		 articoloList.addAll(articoloService.findAll());
-		 return new ResponseEntity<>(articoloList, HttpStatus.OK);
-	    }
+	@RequestMapping(value = "/articoli-search-by-id/{id}", method = RequestMethod.GET)
+	@Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
+	public ResponseEntity<Object> articoloSearchById(
+			@PathVariable( "id" ) Integer id,
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken){
+			Optional<Articolo> articolo = articoloService.findById(id);
+		try {
+			return new ResponseEntity<>(articolo.get(), HttpStatus.OK);
+		}catch(NoSuchElementException e) {
+			return new ResponseEntity<>("Articolo non presente nel magazzino", HttpStatus.OK);
+		}
+		
+	}
+
+
+	@RequestMapping(value = "/new-articolo", method = RequestMethod.POST)
+	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
+	public ResponseEntity<String> articoliInsert(
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken,
+			@RequestBody Articolo articolo
+			) {
+		articoloService.save(articolo);
+		return new ResponseEntity<>(("nuovo id creato = " + articolo.getId()), HttpStatus.CREATED);
+	}
 	 
-	 
-	 @RequestMapping(value = "/articoli-search-by-id/id={id}", method = RequestMethod.GET)
-	 @Secured({AuthorityRolesConstants.ROLE_USER, AuthorityRolesConstants.ROLE_ADMIN})
-	    public ResponseEntity<Articolo> articoloSearchById(
-    		@PathVariable( "id" ) Integer id,
-    		@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken) {
-		 Articolo articolo = articoloService.findArticoloById(id);
-		 return new ResponseEntity<>(articolo, HttpStatus.OK);
-	    }
-	 
-	 
-	 @RequestMapping(value = "/new-articolo", method = RequestMethod.POST)
-	 @Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus articoliInsert(
-	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken,
-	 @RequestBody Articolo articolo
-	 ) {
-		 articoloService.save(articolo);
-		 return HttpStatus.CREATED;
-	 }
-	 
-	 @RequestMapping(value = "/elimina-art/id={id}", method = RequestMethod.DELETE)
-	 @Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus articoliCanc(@PathVariable( "id" ) Integer id,
-	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
-	 ) {
-		 articoloService.delete(id);
-		 return HttpStatus.OK;
-		 
-	 }
-	 
-	 @RequestMapping(value = "/modifica-art/{nome}/prezzo={prezzo}", method = RequestMethod.PUT)
-	 @Secured({AuthorityRolesConstants.ROLE_ADMIN})
-	 public HttpStatus articoliMod(@PathVariable( "nome" ) String nome, @PathVariable( "prezzo" ) Integer prezzo,
-	 @RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
-	 ) {
-		 articoloService.updatePrezzoArticolo(prezzo, nome);;
-		 return HttpStatus.OK;
-		 
-	 }
-		 
+
+	@RequestMapping(value = "/elimina-art/{id}", method = RequestMethod.DELETE)
+	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
+	public ResponseEntity<String> articoliCanc(@PathVariable( "id" ) Integer id,
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
+			) {
+		String stringaConferma = articoloService.delete(id);
+		return new ResponseEntity<>(stringaConferma, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/modifica-art/{id}/{prezzo}", method = RequestMethod.PUT)
+	@Secured({AuthorityRolesConstants.ROLE_ADMIN})
+	public ResponseEntity<String> articoliMod(@PathVariable( "id" ) Integer id, @PathVariable( "prezzo" ) Integer prezzo,
+			@RequestHeader(value=AuthorityRolesConstants.HEADER_STRING) String jwtToken
+			) {
+		String stringaRisposta = articoloService.updatePrezzoById(prezzo, id);
+		return new ResponseEntity<>(stringaRisposta, HttpStatus.OK);
+
+	}
+
 }

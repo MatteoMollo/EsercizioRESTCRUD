@@ -40,17 +40,6 @@ public class Ordine implements java.io.Serializable {
 	public Ordine() {
 	}
 
-   	public Ordine(String intestatario, String indirizzo, List<OrdineArticoli> listaArticoli) {
-		this.intestatario = intestatario;
-		this.indirizzo = indirizzo;
-		this.listaArticoli = listaArticoli;
-	}
-   	
-   	public Ordine(Integer id, String intestatario, String indirizzo) {
-   		this.id = id;
-		this.intestatario = intestatario;
-		this.indirizzo = indirizzo;
-	}
    	
    	public Ordine(String intestatario, String indirizzo) {
 		this.intestatario = intestatario;
